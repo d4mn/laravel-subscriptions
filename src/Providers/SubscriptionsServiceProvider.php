@@ -21,9 +21,9 @@ class SubscriptionsServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = [
-        MigrateCommand::class => 'command.maxal.subscriptions.migrate',
-        PublishCommand::class => 'command.maxal.subscriptions.publish',
-        RollbackCommand::class => 'command.maxal.subscriptions.rollback',
+        MigrateCommand::class,
+        PublishCommand::class,
+        RollbackCommand::class,
     ];
 
     /**
