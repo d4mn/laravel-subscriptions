@@ -6,7 +6,6 @@ namespace MaxAl\Subscriptions\Providers;
 
 use MaxAl\Subscriptions\Models\Plan;
 use Illuminate\Support\ServiceProvider;
-use Rinvex\Support\Traits\ConsoleTools;
 use MaxAl\Subscriptions\Models\PlanFeature;
 use MaxAl\Subscriptions\Models\PlanSubscription;
 use MaxAl\Subscriptions\Models\PlanSubscriptionUsage;
@@ -16,8 +15,6 @@ use MaxAl\Subscriptions\Console\Commands\RollbackCommand;
 
 class SubscriptionsServiceProvider extends ServiceProvider
 {
-    use ConsoleTools;
-
     /**
      * The commands to be registered.
      *
@@ -36,19 +33,19 @@ class SubscriptionsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(realpath(__DIR__ . '/../../config/config.php'), 'maxal.subscriptions');
+        $this->mergeConfigFrom(
+            realpath(__DIR__ . '/../../config/config.php'),
+            'maxal.subscriptions'
+        );
 
-        // Bind eloquent models to IoC container
-        $this->registerModels([
-            'maxal.subscriptions.plan' => Plan::class,
-            'maxal.subscriptions.plan_feature' => PlanFeature::class,
-            'maxal.subscriptions.plan_subscription' => PlanSubscription::class,
-            'maxal.subscriptions.plan_subscription_usage' => PlanSubscriptionUsage::class,
-        ]);
+        // Register bindings in the service container
+        $this->app->bind('maxal.subscriptions.plan', Plan::class);
+        $this->app->bind('maxal.subscriptions.plan_feature', PlanFeature::class);
+        $this->app->bind('maxal.subscriptions.plan_subscription', PlanSubscription::class);
+        $this->app->bind('maxal.subscriptions.plan_subscription_usage', PlanSubscriptionUsage::class);
 
         // Register console commands
-        $this->registerCommands($this->commands);
-        $this->app->register('Rinvex\Support\Providers\SupportServiceProvider');
+        $this->commands(array_values($this->commands));
     }
 
     /**
@@ -58,9 +55,14 @@ class SubscriptionsServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Publish Resources
-        $this->publishesConfig('maxal/laravel-subscriptions');
-        $this->publishesMigrations('maxal/laravel-subscriptions');
-        !$this->autoloadMigrations('maxal/laravel-subscriptions') || $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../../config/config.php' => config_path('maxal/subscriptions.php'),
+            ], 'config');
+
+            $this->publishes([
+                __DIR__ . '/../../database/migrations' => database_path('migrations'),
+            ], 'migrations');
+        }
     }
 }
