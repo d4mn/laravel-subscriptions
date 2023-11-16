@@ -15,16 +15,6 @@ use MaxAl\Subscriptions\Console\Commands\RollbackCommand;
 
 class SubscriptionsServiceProvider extends ServiceProvider
 {
-    /**
-     * The commands to be registered.
-     *
-     * @var array
-     */
-    protected $commands = [
-        MigrateCommand::class,
-        PublishCommand::class,
-        RollbackCommand::class,
-    ];
 
     /**
      * Register the application services.
@@ -33,19 +23,7 @@ class SubscriptionsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(
-            realpath(__DIR__ . '/../../config/config.php'),
-            'maxal.subscriptions'
-        );
-
-        // Register bindings in the service container
-        $this->app->bind('maxal.subscriptions.plan', Plan::class);
-        $this->app->bind('maxal.subscriptions.plan_feature', PlanFeature::class);
-        $this->app->bind('maxal.subscriptions.plan_subscription', PlanSubscription::class);
-        $this->app->bind('maxal.subscriptions.plan_subscription_usage', PlanSubscriptionUsage::class);
-
-        // Register console commands
-        $this->commands(array_values($this->commands));
+        $this->mergeConfigFrom(__DIR__ . '/../../config/config.php', 'maxal.subscriptions');
     }
 
     /**
@@ -57,12 +35,17 @@ class SubscriptionsServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../../config/config.php' => config_path('maxal/subscriptions.php'),
+                __DIR__ . '/../../config/config.php' => $this->app->configPath('maxal/subscriptions.php'),
             ], 'config');
 
             $this->publishes([
-                __DIR__ . '/../../database/migrations' => database_path('migrations'),
+                __DIR__ . '/../../database/migrations' => $this->app->databasePath('migrations'),
             ], 'migrations');
+            $this->commands([
+                MigrateCommand::class,
+                PublishCommand::class,
+                RollbackCommand::class,
+            ]);
         }
     }
 }
