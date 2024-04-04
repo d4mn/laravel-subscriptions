@@ -11,14 +11,14 @@ class Period
     /**
      * Starting date of the period.
      *
-     * @var string
+     * @var Carbon
      */
     protected $start;
 
     /**
      * Ending date of the period.
      *
-     * @var string
+     * @var Carbon
      */
     protected $end;
 

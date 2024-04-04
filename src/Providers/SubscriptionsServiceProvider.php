@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace MaxAl\Subscriptions\Providers;
 
-use MaxAl\Subscriptions\Models\Plan;
 use Illuminate\Support\ServiceProvider;
-use MaxAl\Subscriptions\Models\PlanFeature;
-use MaxAl\Subscriptions\Models\PlanSubscription;
-use MaxAl\Subscriptions\Models\PlanSubscriptionUsage;
 use MaxAl\Subscriptions\Console\Commands\MigrateCommand;
 use MaxAl\Subscriptions\Console\Commands\PublishCommand;
 use MaxAl\Subscriptions\Console\Commands\RollbackCommand;
