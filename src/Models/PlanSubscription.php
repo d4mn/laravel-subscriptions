@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace MaxAl\Subscriptions\Models;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use LogicException;
 use Spatie\Sluggable\SlugOptions;
-use Rinvex\Support\Traits\HasSlug;
+use MaxAl\Subscriptions\Traits\HasSlug;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use MaxAl\Subscriptions\Services\Period;
-use Rinvex\Support\Traits\HasTranslations;
-use Rinvex\Support\Traits\ValidatingTrait;
+use MaxAl\Subscriptions\Traits\HasTranslations;
+use MaxAl\Subscriptions\Traits\ValidatingTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use MaxAl\Subscriptions\Traits\BelongsToPlan;
 use Illuminate\Database\Eloquent\Relations\HasMany;

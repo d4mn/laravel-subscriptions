@@ -6,12 +6,12 @@ namespace MaxAl\Subscriptions\Models;
 
 use Carbon\Carbon;
 use Spatie\Sluggable\SlugOptions;
-use Rinvex\Support\Traits\HasSlug;
+use MaxAl\Subscriptions\Traits\HasSlug;
 use Spatie\EloquentSortable\Sortable;
 use Illuminate\Database\Eloquent\Model;
 use MaxAl\Subscriptions\Services\Period;
-use Rinvex\Support\Traits\HasTranslations;
-use Rinvex\Support\Traits\ValidatingTrait;
+use MaxAl\Subscriptions\Traits\HasTranslations;
+use MaxAl\Subscriptions\Traits\ValidatingTrait;
 use Spatie\EloquentSortable\SortableTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use MaxAl\Subscriptions\Traits\BelongsToPlan;
