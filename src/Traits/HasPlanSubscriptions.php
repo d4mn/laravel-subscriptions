@@ -45,7 +45,7 @@ trait HasPlanSubscriptions
      */
     public function planSubscriptions(): MorphMany
     {
-        return $this->morphMany(config('maxal.subscriptions.models.plan_subscription'), 'subscriber', 'subscriber_type', 'subscriber_id');
+        return $this->morphMany(config('maxal.subscriptions.models.plan_subscription'), 'user', 'user_type', 'user_id');
     }
 
     /**

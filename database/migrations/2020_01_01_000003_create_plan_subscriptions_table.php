@@ -15,7 +15,7 @@ class CreatePlanSubscriptionsTable extends Migration
     {
         Schema::create(config('maxal.subscriptions.tables.plan_subscriptions'), function (Blueprint $table) {
             $table->increments('id');
-            $table->morphs('subscriber');
+            $table->morphs('user');
             $table->integer('plan_id')->unsigned();
             $table->string('slug');
             $table->json('name');

@@ -24,8 +24,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * MaxAl\Subscriptions\Models\PlanSubscription.
  *
  * @property int                 $id
- * @property int                 $subscriber_id
- * @property string              $subscriber_type
+ * @property int                 $user_id
+ * @property string              $user_type
  * @property int                 $plan_id
  * @property string              $slug
  * @property array               $title
@@ -40,14 +40,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property \Carbon\Carbon|null $deleted_at
  * @property-read \MaxAl\Subscriptions\Models\Plan                                                             $plan
  * @property-read \Illuminate\Database\Eloquent\Collection|\MaxAl\Subscriptions\Models\PlanSubscriptionUsage[] $usage
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent                                                 $subscriber
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent                                                 $user
  *
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription byPlanId($planId)
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription findEndedPeriod()
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription findEndedTrial()
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription findEndingPeriod($dayRange = 3)
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription findEndingTrial($dayRange = 3)
- * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription ofSubscriber(\Illuminate\Database\Eloquent\Model $subscriber)
+ * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription ofSubscriber(\Illuminate\Database\Eloquent\Model $user)
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription whereCanceledAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription whereCancelsAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\MaxAl\Subscriptions\Models\PlanSubscription whereCreatedAt($value)
@@ -78,8 +78,8 @@ class PlanSubscription extends Model
      * {@inheritdoc}
      */
     protected $fillable = [
-        'subscriber_id',
-        'subscriber_type',
+        'user_id',
+        'user_type',
         'plan_id',
         'slug',
         'name',
@@ -95,8 +95,8 @@ class PlanSubscription extends Model
      * {@inheritdoc}
      */
     protected $casts = [
-        'subscriber_id'         => 'integer',
-        'subscriber_type'       => 'string',
+        'user_id'         => 'integer',
+        'user_type'       => 'string',
         'plan_id'               => 'integer',
         'slug'                  => 'string',
         'trial_ends_at'         => 'datetime',
@@ -153,8 +153,8 @@ class PlanSubscription extends Model
             'description'       => 'nullable|string|max:32768',
             'slug'              => 'required|alpha_dash|max:150|unique:' . config('maxal.subscriptions.tables.plan_subscriptions') . ',slug',
             'plan_id'           => 'required|integer|exists:' . config('maxal.subscriptions.tables.plans') . ',id',
-            'subscriber_id'     => 'required|integer',
-            'subscriber_type'   => 'required|string|strip_tags|max:150',
+            'user_id'     => 'required|integer',
+            'user_type'   => 'required|string|strip_tags|max:150',
             'trial_ends_at'     => 'nullable|date',
             'starts_at'         => 'required|date',
             'ends_at'           => 'required|date',
@@ -197,13 +197,13 @@ class PlanSubscription extends Model
     }
 
     /**
-     * Get the owning subscriber.
+     * Get the owning user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function subscriber(): MorphTo
+    public function user(): MorphTo
     {
-        return $this->morphTo('subscriber', 'subscriber_type', 'subscriber_id', 'id');
+        return $this->morphTo('user', 'user_type', 'user_id', 'id');
     }
 
     /**
@@ -390,16 +390,16 @@ class PlanSubscription extends Model
     }
 
     /**
-     * Get bookings of the given subscriber.
+     * Get bookings of the given user.
      *
      * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @param \Illuminate\Database\Eloquent\Model   $subscriber
+     * @param \Illuminate\Database\Eloquent\Model   $user
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeOfSubscriber(Builder $builder, Model $subscriber): Builder
+    public function scopeOfUser(Builder $builder, Model $user): Builder
     {
-        return $builder->where('subscriber_type', $subscriber->getMorphClass())->where('subscriber_id', $subscriber->getKey());
+        return $builder->where('user_type', $user->getMorphClass())->where('user_id', $user->getKey());
     }
 
     /**
