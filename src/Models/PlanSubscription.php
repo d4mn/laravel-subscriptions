@@ -149,12 +149,12 @@ class PlanSubscription extends Model
     {
         $this->setTable(config('maxal.subscriptions.tables.plan_subscriptions'));
         $this->mergeRules([
-            'name'              => 'required|string|strip_tags|max:150',
+            'name'              => 'required|string|max:150',
             'description'       => 'nullable|string|max:32768',
             'slug'              => 'required|alpha_dash|max:150|unique:' . config('maxal.subscriptions.tables.plan_subscriptions') . ',slug',
             'plan_id'           => 'required|integer|exists:' . config('maxal.subscriptions.tables.plans') . ',id',
             'user_id'     => 'required|integer',
-            'user_type'   => 'required|string|strip_tags|max:150',
+            'user_type'   => 'required|string|max:150',
             'trial_ends_at'     => 'nullable|date',
             'starts_at'         => 'required|date',
             'ends_at'           => 'required|date',

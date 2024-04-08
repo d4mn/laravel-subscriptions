@@ -142,7 +142,7 @@ class PlanFeature extends Model implements Sortable
         $this->mergeRules([
             'plan_id'               => 'required|integer|exists:' . config('maxal.subscriptions.tables.plans') . ',id',
             'slug'                  => 'required|alpha_dash|max:150|unique:' . config('maxal.subscriptions.tables.plan_features') . ',slug',
-            'name'                  => 'required|string|strip_tags|max:150',
+            'name'                  => 'required|string|max:150',
             'description'           => 'nullable|string|max:32768',
             'value'                 => 'required|string',
             'resettable_period'     => 'sometimes|integer',
